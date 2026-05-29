@@ -1,0 +1,16 @@
+{
+  "name": "Frictionless Finance",
+  "short_name": "Frictionless",
+  "description": "My personal finance tracker",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}
