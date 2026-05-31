@@ -10,10 +10,10 @@ from pydantic import BaseModel
 app = FastAPI()
 
 app.add_middleware(
-    CORSMiddleware, 
-    allow_origins=["*"], 
+    CORSMiddleware,
+    allow_origins=["*"],  # The wildcard "*" allows your dynamic Vercel frontend URL to connect
     allow_credentials=False, 
-    allow_methods=["*"], 
+    allow_methods=["*"],  # Allows POST, GET, OPTIONS, etc.
     allow_headers=["*"],
 )
 
