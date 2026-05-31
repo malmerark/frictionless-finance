@@ -5,6 +5,10 @@ import { useUser, UserButton, RedirectToSignIn } from "@clerk/nextjs";
 
 export default function Home() {
   const { isLoaded, isSignedIn, user } = useUser(); 
+  
+  // THE FIX: Dynamic floating URL that checks Vercel first, then falls back to localhost
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
   const [transactions, setTransactions] = useState<any[]>([]);
   const [inputText, setInputText] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,8 +29,8 @@ export default function Home() {
     if (!user) return;
     try {
       const [txRes, setRes] = await Promise.all([
-        fetch("http://localhost:8000/api/transactions", { headers: secureHeaders }),
-        fetch("http://localhost:8000/api/settings", { headers: secureHeaders })
+        fetch(`${API_URL}/api/transactions`, { headers: secureHeaders }),
+        fetch(`${API_URL}/api/settings`, { headers: secureHeaders })
       ]);
       if (txRes.ok) setTransactions(await txRes.json());
       if (setRes.ok) {
@@ -41,7 +45,7 @@ export default function Home() {
 
   const handleSaveSettings = async () => {
     try {
-      await fetch("http://localhost:8000/api/settings", {
+      await fetch(`${API_URL}/api/settings`, {
         method: "PUT", headers: secureHeaders,
         body: JSON.stringify(tempCaps),
       });
@@ -54,13 +58,13 @@ export default function Home() {
     if (!inputText.trim()) return;
     try {
       if (editingId) {
-        await fetch(`http://localhost:8000/api/transactions/${editingId}`, {
+        await fetch(`${API_URL}/api/transactions/${editingId}`, {
           method: "PUT", headers: secureHeaders,
           body: JSON.stringify({ text: inputText }),
         });
         setEditingId(null);
       } else {
-        await fetch("http://localhost:8000/api/add", {
+        await fetch(`${API_URL}/api/add`, {
           method: "POST", headers: secureHeaders,
           body: JSON.stringify({ text: inputText }),
         });
@@ -72,7 +76,7 @@ export default function Home() {
 
   const handleDelete = async (id: string) => {
     try {
-      await fetch(`http://localhost:8000/api/transactions/${id}`, { 
+      await fetch(`${API_URL}/api/transactions/${id}`, { 
         method: "DELETE", headers: secureHeaders 
       });
       fetchData();
@@ -81,7 +85,7 @@ export default function Home() {
 
   const handleSettle = async (id: string) => {
     try {
-      await fetch(`http://localhost:8000/api/transactions/${id}/settle`, { 
+      await fetch(`${API_URL}/api/transactions/${id}/settle`, { 
         method: "PUT", headers: secureHeaders 
       });
       fetchData();
